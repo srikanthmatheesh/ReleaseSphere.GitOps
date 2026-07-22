@@ -36,7 +36,7 @@ spec:
             path: redis.conf
       - name: redis-data-volume
         persistentVolumeClaim:
-          claimName: redis-pvc
+          claimName: release-sphere-pvc
 
 ---
 apiVersion: v1
