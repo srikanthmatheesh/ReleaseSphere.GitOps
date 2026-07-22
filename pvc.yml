@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: redis-pvc
+  name: release-sphere-pvc
   namespace: release-sphere-services
 spec:
   accessModes:
