@@ -1,0 +1,53 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deployment
+  namespace: release-sphere-services
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis-container
+        image: redis:alpine
+        command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+        ports:
+        - containerPort: 6379
+          name: redis-port
+        volumeMounts:
+        - name: config-volume
+          mountPath: /usr/local/etc/redis
+        - name: redis-data-volume
+          mountPath: /data
+          subPath: redis
+      volumes:
+      - name: config-volume
+        configMap:
+          name: redis-configmap
+          items:
+          - key: redis.conf
+            path: redis.conf
+      - name: redis-data-volume
+        persistentVolumeClaim:
+          claimName: redis-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+  namespace: release-sphere-services
+spec:
+  type: ClusterIP
+  ports:
+  - port: 6379
+    targetPort: redis-port
+  selector:
+    app: redis
