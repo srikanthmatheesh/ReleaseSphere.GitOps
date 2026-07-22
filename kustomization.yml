@@ -8,3 +8,4 @@ resources:
 - redis.yml
 - neo4j.yml
 - postgres.yml
+- kafka.yml
