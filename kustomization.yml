@@ -6,3 +6,4 @@ resources:
 - pv.yml
 - configmap.yml
 - redis.yml
+- neo4j.yml
