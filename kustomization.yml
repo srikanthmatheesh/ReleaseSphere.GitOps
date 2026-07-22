@@ -7,3 +7,4 @@ resources:
 - configmap.yml
 - redis.yml
 - neo4j.yml
+- postgres.yml
