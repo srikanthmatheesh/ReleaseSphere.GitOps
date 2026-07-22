@@ -1,0 +1,66 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: neo4j-deployment
+  namespace: release-sphere-services
+  labels:
+    app: neo4j
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: neo4j
+  template:
+    metadata:
+      labels:
+        app: neo4j
+    spec:
+      enableServiceLinks: false # FIXED: Prevents K8s from injecting conflicting variables
+      securityContext:
+        fsGroup: 7474 # Neo4j default user group ID
+      containers:
+        - name: neo4j
+          image: neo4j:latest
+          ports:
+            - containerPort: 7474
+              name: http
+            - containerPort: 7687
+              name: bolt
+            - containerPort: 7473
+              name: https
+          envFrom:
+            - configMapRef:
+                name: neo4j-configmap
+          volumeMounts:
+            - name: neo4j-data-volume
+              mountPath: /data
+              subPath: neo4j
+
+      volumes:
+      - name: neo4j-data-volume
+        persistentVolumeClaim:
+          claimName: release-sphere-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: neo4j-service
+  namespace: release-sphere-services
+spec:
+  type: ClusterIP
+  selector:
+    app: neo4j
+  ports:
+    - name: http
+      protocol: TCP
+      port: 7474
+      targetPort: http
+    - name: bolt
+      protocol: TCP
+      port: 7687
+      targetPort: bolt
+    - name: https
+      protocol: TCP
+      port: 7473
+      targetPort: https
