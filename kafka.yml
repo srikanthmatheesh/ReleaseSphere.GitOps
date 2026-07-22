@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-deployment
+  namespace: release-sphere-services
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka
+  template:
+    metadata:
+      labels:
+        app: kafka
+    spec:
+      containers:
+        - name: kafka
+          image: apache/kafka:latest
+          ports:
+            - containerPort: 9092
+              name: kafka-port
+          envFrom:
+            - configMapRef:
+                name: kafka-config
+          volumeMounts:
+            - mountPath: /var/lib/kafka/data
+              name: kafka-data
+              subPath: kafka
+      volumes:
+        - name: kafka-data
+          persistentVolumeClaim:
+            claimName: release-sphere-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-service
+  namespace: release-sphere-services
+spec:
+  type: ClusterIP
+  ports:
+  - port: 9092
+    targetPort: kafka-port
+    protocol: TCP
+  selector:
+    app: kafka
+
+
