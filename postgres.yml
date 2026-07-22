@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres
+  name: postgres-deployment
   namespace: release-sphere-services
   labels:
     app: postgres
@@ -21,6 +21,7 @@ spec:
           image: postgres:16
           ports:
             - containerPort: 5432
+              name: redis-port
           envFrom:
             - configMapRef:
                 name: postgres-config
@@ -36,15 +37,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: postgres
+  name: postgres-service
   namespace: release-sphere-services
   labels:
     app: postgres
 spec:
-  clusterIP: None
+  type: ClusterIP
   selector:
     app: postgres
   ports:
     - port: 5432
-      targetPort: 5432
-      protocol: TCP
+      targetPort: postgres-port
