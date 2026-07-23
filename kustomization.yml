@@ -10,3 +10,5 @@ resources:
 - postgres.yml
 - kafka.yml
 - timescaledb.yml
+- webapi.yml
+- webapp.yml
