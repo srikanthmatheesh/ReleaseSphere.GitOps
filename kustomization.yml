@@ -9,3 +9,4 @@ resources:
 - neo4j.yml
 - postgres.yml
 - kafka.yml
+- timescaledb.yml
