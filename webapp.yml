@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp-deployment
+  namespace: release-sphere-services
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapp
+  template:
+    metadata:
+      labels:
+        app: webapp
+    spec:
+      imagePullSecrets:
+        - name: ghcr-secret
+      containers:
+      - name: webapp
+        image: ghcr.io/srikanthmatheesh/releasesphere-web:latest
+        ports:
+        - containerPort: 80
+          name: webapp-port
+        volumeMounts:
+        - name: webapp-data-volume
+          mountPath: /app
+          subPath: webapp
+      volumes:
+      - name: webapp-data-volume
+        persistentVolumeClaim:
+          claimName: release-sphere-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp-service
+  namespace: release-sphere-services
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: webapp-port
+  selector:
+    app: webapp
