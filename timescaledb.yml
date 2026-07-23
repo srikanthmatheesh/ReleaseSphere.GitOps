@@ -1,0 +1,49 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: timescaledb-deployment
+  namespace: release-sphere-services
+  labels:
+    app: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: timescaledb
+  template:
+    metadata:
+      labels:
+        app: timescaledb
+    spec:
+      containers:
+        - name: timescaledb
+          image: 'timescale/timescaledb-ha:pg18'
+          ports:
+            - containerPort: 5432
+              name: tsdb-port
+          envFrom:
+            - configMapRef:
+                name: timescaledb-config
+          volumeMounts:
+            - name: timescaledb-storage
+              mountPath: /var/lib/postgresql/data
+              subPath: timescaledb
+      volumes:
+        - name: timescaledb-storage
+          persistentVolumeClaim:
+            claimName: release-sphere-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: timescaledb-service
+  namespace: release-sphere-services
+spec:
+  type: ClusterIP
+  ports:
+  - port: 5432
+    protocol: TCP
+    targetPort: tsdb-port
+  selector:
+    app: timescaledb
