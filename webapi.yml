@@ -22,14 +22,14 @@ spec:
           ports:
           - containerPort: 80
             name: webapi-port
-          volumeMounts:
-          - name: webapi-data-volume
-            mountPath: /app
-            subPath: webapi
-      volumes:
-      - name: webapi-data-volume
-        persistentVolumeClaim:
-          claimName: release-sphere-pvc
+      #     volumeMounts:
+      #     - name: webapi-data-volume
+      #       mountPath: /app
+      #       subPath: webapi
+      # volumes:
+      # - name: webapi-data-volume
+      #   persistentVolumeClaim:
+      #     claimName: release-sphere-pvc
 ---
 apiVersion: v1
 kind: Service
