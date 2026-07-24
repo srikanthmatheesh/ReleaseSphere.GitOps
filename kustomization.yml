@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
 - namespace.yml
 - pv.yml
+- pvc.yml
 - configmap.yml
 - redis.yml
 - neo4j.yml
