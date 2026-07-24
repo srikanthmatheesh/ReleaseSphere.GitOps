@@ -21,7 +21,7 @@ spec:
           image: postgres:16
           ports:
             - containerPort: 5432
-              name: redis-port
+              name: postgres-port
           envFrom:
             - configMapRef:
                 name: postgres-config
