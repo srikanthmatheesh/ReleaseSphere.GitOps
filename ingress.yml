@@ -23,7 +23,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: webapp
+  name: webapi
   namespace: release-sphere-services
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
