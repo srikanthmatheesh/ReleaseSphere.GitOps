@@ -22,6 +22,9 @@ spec:
         ports:
         - containerPort: 3000
           name: webapp-port
+        envFrom:
+            - configMapRef:
+                name: webapp-config
       #   volumeMounts:
       #   - name: webapp-data-volume
       #     mountPath: /app
