@@ -12,3 +12,4 @@ resources:
 - timescaledb.yml
 - webapi.yml
 - webapp.yml
+- ingress.yml
